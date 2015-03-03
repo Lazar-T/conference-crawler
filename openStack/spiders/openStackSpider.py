@@ -6,6 +6,7 @@ from scrapy.contrib.loader import ItemLoader
 from scrapy.contrib.loader.processor import Compose, MapCompose
 from w3lib.html import replace_escape_chars, remove_tags
 from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.http import Request
 from scrapy.selector import Selector
 import urlparse
@@ -14,32 +15,13 @@ import urlparse
 class ItemspiderSpider(CrawlSpider):
     name = "itemspider"
     allowed_domains = ["openstacksummitnovember2014paris.sched.org"]
-    start_urls = [
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/1',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/2',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/3',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/4',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/5',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/6',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/7',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/8',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/9',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/10',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/11',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/12',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/13',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/14',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/15',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/16',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/17',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/18',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/19',
-        'http://openstacksummitnovember2014paris.sched.org/directory/attendees/20',
+    start_urls = ['http://openstacksummitnovember2014paris.sched.org/directory/attendees/']
+    
+    rules = (
+        Rule(SgmlLinkExtractor(allow=('/directory/attendees/\d+')), callback='parse_page', follow=True),
+    )    
 
-
-    ]
-
-    def parse(self, response):
+    def parse_page(self, response):
         hxs = Selector(response)
         item_selector = hxs.xpath('//h2/a/@href').extract()
         for url in item_selector:
