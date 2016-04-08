@@ -14,7 +14,11 @@ Also included csv, json and xml files with populated fields of each individual a
 ```
 git clone https://github.com/Lazar-T/conference-crawler
 cd conference-crawler
-scrapy crawl itemspider
+scrapy crawl openstack
 ```
 
+To run tests:
 
+```
+scrapy check openstack
+```
