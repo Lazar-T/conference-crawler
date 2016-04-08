@@ -17,7 +17,7 @@ cd conference-crawler
 scrapy crawl openstack
 ```
 
-To run tests:
+### To run tests:
 
 ```
 scrapy check openstack
